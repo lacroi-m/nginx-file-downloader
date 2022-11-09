@@ -19,16 +19,17 @@ def createFolder(directoryName):
 
 def downloadFile(url, fileName, directoryName):
 	destination = directoryName+"/"+fileName
-	if directoryName is "":
+	if directoryName == "":
 		destination = fileName
 	if os.path.exists(destination):
-		print(destination + " already exists, skipping...")
+		print("duplicate found '" + destination + "' - skipping...")
 		return
 	newUrl = url + fileName
 
 	if directoryName != "" and os.path.exists(directoryName) == False:
 		createFolder(directoryName)
 
+	print("downloading '" + newUrl + "' to " + destination)
 	response = requests.get(newUrl, auth=HTTPBasicAuth(username, password))
 	open(destination, "wb").write(response.content)
 
@@ -38,7 +39,7 @@ def GoToDirectory(url, directoryName):
 
 	for element in response.json():
 		if element["type"] == 'directory':
-			GoToDirectory(newUrl, element["name"])
+			GoToDirectory(url, directoryName+"/"+element["name"])
 		if element["type"] == 'file':
 			downloadFile(newUrl, element["name"], directoryName)
 
