@@ -19,12 +19,14 @@ def createFolder(directoryName):
 
 def downloadFile(url, fileName, directoryName):
 	destination = directoryName+"/"+fileName
+	if directoryName is "":
+		destination = fileName
 	if os.path.exists(destination):
 		print(destination + " already exists, skipping...")
 		return
 	newUrl = url + fileName
 
-	if os.path.exists(directoryName) == False:
+	if directoryName != "" and os.path.exists(directoryName) == False:
 		createFolder(directoryName)
 
 	response = requests.get(newUrl, auth=HTTPBasicAuth(username, password))
@@ -46,6 +48,6 @@ def start():
 		if element["type"] == "directory":
 			GoToDirectory(baseUrl, element["name"])
 		if element["type"] == "file":
-			downloadFile(baseUrl, element["name"])
+			downloadFile(baseUrl, element["name"], "")
 
 start()
